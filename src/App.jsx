@@ -11,7 +11,6 @@ function App() {
     'Operating Systems'
   ];
 
-  // array more like useState() rename in position
   const [name, setName] = useLocalStorage('studentName', '');
   const [language, setLanguage] = useLocalStorage('language', 'JavaScript');
   const [darkMode, setDarkMode] = useLocalStorage('darkMode', false);
