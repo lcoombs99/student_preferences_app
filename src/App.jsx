@@ -1,50 +1,64 @@
-import { useEffect, useState } from "react";
+import useLocalStorage from './hooks/useLocalStorage.js';
 
 function App() {
-  // Name preference
-  const [name, setName] = useState(() => {
-    const savedName = localStorage.getItem("studentName");
-    return savedName || "";
-  });
 
-  useEffect(() => {
-    localStorage.setItem("studentName", name);
-  }, [name]);
+  const topics = [
+    'Web Development',
+    'Cybersecurity',
+    'Databases',
+    'Artificial Intelligence',
+    'Mobile Development',
+    'Operating Systems'
+  ];
 
-  // Favorite language preference
-  const [language, setLanguage] = useState(() => {
-    const savedLanguage = localStorage.getItem("favoriteLanguage");
-    return savedLanguage || "JavaScript";
-  });
+  // NAME - String
+  const {
+    value: name,
+    setValue: setName
+  } = useLocalStorage('studentName', '');
 
-  useEffect(() => {
-    localStorage.setItem("favoriteLanguage", language);
-  }, [language]);
+  // LANGUAGE - STring
+  const {
+    value: language,
+    setValue: setLanguage
+  } = useLocalStorage('language', '');
 
-  // Dark mode preference
-  const [darkMode, setDarkMode] = useState(() => {
-    const savedDarkMode = localStorage.getItem("darkMode");
-    return savedDarkMode === "true";
-  });
+  // DARK MODE - Boolean
+  const {
+    value: darkMode,
+    setValue: setDarkMode
+  } = useLocalStorage('darkMode', false);
 
-  useEffect(() => {
-    localStorage.setItem("darkMode", darkMode);
-  }, [darkMode]);
+  // FAVORITE TOPICS - Array
+  const {
+    value: favoriteTopics,
+    setValue: setFavoriteTopics
+  } = useLocalStorage('favoriteTopics', []);
+
+  // Handle array for topic checkboxes - setFavoriteTopics()
+  const topicChangeHandler = (topic) => {
+    setFavoriteTopics((selectedTopics) =>
+      selectedTopics.includes(topic)
+        ? selectedTopics.filter((item) => item !== topic)
+        : [...selectedTopics, topic]
+    );
+  };
 
   const formSubmitHandler = (event) => {
     event.preventDefault();
 
-    console.log("Saved Preferences:", {
-      name,
-      language,
-      darkMode,
+    console.log('Saved Preferences:', {
+      name: name,
+      language: language,
+      darkMode: darkMode,
+      favoriteTopics: favoriteTopics
     });
 
-    alert("Preferences saved!");
+    alert('Preferences saved!');
   };
 
   return (
-    <div className={darkMode ? "app dark" : "app"}>
+    <div className={darkMode ? 'app dark' : 'app'}>
       <h1>Student Preferences</h1>
 
       <form onSubmit={formSubmitHandler}>
@@ -83,21 +97,46 @@ function App() {
           />
         </div>
 
+        <div className="form-control topics-control">
+          <fieldset className="topics-fieldset">
+            <legend>Favorite Topics</legend>
+
+            {topics.map((topic) => (
+              <div key={topic} className="topic-option">
+                <label htmlFor={topic}>{topic}</label>
+                <input
+                  type="checkbox"
+                  id={topic}
+                  checked={favoriteTopics.includes(topic)}
+                  onChange={() => topicChangeHandler(topic)}
+                />
+              </div>
+            ))}
+          </fieldset>
+        </div>
+
         <button type="submit">Save Preferences</button>
       </form>
 
       <div className="preferences">
         <h2>Current Preferences</h2>
         <p>
-          <strong>Name:</strong> {name || "Not set"}
+          <strong>Name:</strong> {name || 'Not set'}
         </p>
         <p>
-          <strong>Favorite Language:</strong> {language}
+          <strong>Favorite Language:</strong> {language || 'Not set'}
         </p>
         <p>
-          <strong>Dark Mode:</strong> {darkMode ? "On" : "Off"}
+          <strong>Dark Mode:</strong> {darkMode ? 'On' : 'Off'}
+        </p>
+        <p>
+          <strong>Favorite Topics:</strong>{' '}
+          {favoriteTopics.length > 0
+            ? favoriteTopics.join(', ')
+            : 'None selected'}
         </p>
       </div>
+
     </div>
   );
 }
