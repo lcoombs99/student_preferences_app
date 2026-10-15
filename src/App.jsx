@@ -11,31 +11,12 @@ function App() {
     'Operating Systems'
   ];
 
-  // NAME - String
-  const {
-    value: name,
-    setValue: setName
-  } = useLocalStorage('studentName', '');
+  // array more like useState() rename in position
+  const [name, setName] = useLocalStorage('studentName', '');
+  const [language, setLanguage] = useLocalStorage('language', 'JavaScript');
+  const [darkMode, setDarkMode] = useLocalStorage('darkMode', false);
+  const [favoriteTopics, setFavoriteTopics] = useLocalStorage('favoriteTopics', []);
 
-  // LANGUAGE - STring
-  const {
-    value: language,
-    setValue: setLanguage
-  } = useLocalStorage('language', '');
-
-  // DARK MODE - Boolean
-  const {
-    value: darkMode,
-    setValue: setDarkMode
-  } = useLocalStorage('darkMode', false);
-
-  // FAVORITE TOPICS - Array
-  const {
-    value: favoriteTopics,
-    setValue: setFavoriteTopics
-  } = useLocalStorage('favoriteTopics', []);
-
-  // Handle array for topic checkboxes - setFavoriteTopics()
   const topicChangeHandler = (topic) => {
     setFavoriteTopics((selectedTopics) =>
       selectedTopics.includes(topic)

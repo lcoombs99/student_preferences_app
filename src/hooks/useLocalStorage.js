@@ -9,13 +9,14 @@ const useLocalStorage = (key, initialValue) => {
     return savedValue !== null ? JSON.parse(savedValue) : initialValue;
   });
 
-  // update correct value when changed
   useEffect(() => {
+    console.log("In use effect");
     // JSON.stringify to convert to string for storage
     localStorage.setItem(key, JSON.stringify(value));
   }, [key, value]);
 
-  return {value, setValue};
+  // return a reusable interface similar to useState
+  return [value, setValue];
 };
 
 export default useLocalStorage;
